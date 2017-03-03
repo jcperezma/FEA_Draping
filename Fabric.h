@@ -1,4 +1,5 @@
 #include "DrapingMesh.h"
+#include <stdio.h>
 
 class Fabric
 {
