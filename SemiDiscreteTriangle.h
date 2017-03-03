@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
 #include "vectorOps.h"
-
+#include <limits>
+#include <cstdlib>
 #define sidesPerElement 3 
 
 struct side{

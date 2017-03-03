@@ -407,7 +407,7 @@ void SDTriangle::computeInternalForce(double C1, double C2 , double ct1, double 
 
 	// if gamma is very high, wrinkle will form, add a force on all triangles normal to the triangle
 
-	if(abs(gamma)>0.4){
+	if(std::abs(gamma)>0.4){
 		vector3D N = cross(g_1,g_2);
 		N = N/ (norm(N)*1000000);
 		for (int ii = 0; ii < nodes.size(); ii++)//nodes.size()
