@@ -12,7 +12,7 @@ std::vector<vector3D> readNodesCoords(std::ifstream & tempFile){
 	ss<<line;
 	int NumNodes;
 	ss>>NumNodes;
-	ss.str("");// flush stream
+	std::stringstream().swap(ss);// flush stream
 	
 
 	//read node coords
@@ -24,7 +24,7 @@ std::vector<vector3D> readNodesCoords(std::ifstream & tempFile){
 		ss>>p.x;
 		ss>>p.y;
 		ss>>p.z;
-		ss.str("");// flush stream
+		std::stringstream().swap(ss);// flush stream
 		coords.push_back(p);
 	}
 	return coords;
@@ -38,7 +38,7 @@ std::vector<SDTriangle> readElements(std::ifstream & tempFile){
 	ss<<line;
 	int NumElements;
 	ss>>NumElements;
-	ss.str("");// flush stream
+	std::stringstream().swap(ss);// flush stream
 
 	// read element topology
 	for (int i = 0; i < NumElements; i++)
@@ -57,7 +57,7 @@ std::vector<SDTriangle> readElements(std::ifstream & tempFile){
 		SDTriangle tri;
 		tri.setNodes(nodeID);
 		elements.push_back(tri);
-		ss.str("");// flush stream
+		std::stringstream().swap(ss);// flush stream
 	}
 	return elements;
 }
@@ -72,7 +72,7 @@ std::vector<BC> readBC(std::ifstream & tempFile ){
 	ss<<line;
 	int NumUConstrains;
 	ss>>NumUConstrains;
-	ss.str("");// flush stream
+	std::stringstream().swap(ss);// flush stream
 
 	//read indices of the constrains
 	for (int i = 0; i < NumUConstrains; i++)
@@ -81,7 +81,7 @@ std::vector<BC> readBC(std::ifstream & tempFile ){
 		getline (tempFile,line);
 		ss<<line;
 		ss>>U_ID;
-		ss.str("");// flush stream
+		std::stringstream().swap(ss);// flush stream
 		BC_ID.push_back(U_ID);
 	}
 
@@ -92,7 +92,7 @@ std::vector<BC> readBC(std::ifstream & tempFile ){
 		std::getline (tempFile,line);
 		ss<<line;
 		ss>>U_value;
-		ss.str("");// flush stream
+		std::stringstream().swap(ss);// flush stream
 		BC_value.push_back(U_value);
 	}
 
@@ -129,7 +129,8 @@ void Fabric::initilizeFromFile(std::string fileName){
 	// bending stiffness
 	ss>>B_k;
 
-	ss.str("");// flush stream
+	std::stringstream().swap(ss);
+	
 
 
 	// read k1 and k2
@@ -139,7 +140,7 @@ void Fabric::initilizeFromFile(std::string fileName){
 	ss>>k1.x; ss>>k1.y; ss>>k1.z; 
 	// Shear properties of the fabric
 	ss>>k2.x; ss>>k2.y; ss>>k2.z; 
-	ss.str("");// flush stream
+	std::stringstream().swap(ss);
 
 	// read k1 and k2
 	getline (tempFile,line);
@@ -148,7 +149,7 @@ void Fabric::initilizeFromFile(std::string fileName){
 	ss>>rho;
 	// threads per m
 	ss>>n1; ss>>n2; 
-	ss.str("");// flush stream
+	std::stringstream().swap(ss);// flush stream
 
 	// read mesh topology
 	std::vector<vector3D> coords = readNodesCoords(tempFile); 

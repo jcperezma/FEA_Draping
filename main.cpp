@@ -1,10 +1,15 @@
 #pragma once
 #include "Fabric.h"
 #include "tests.h"
+#include <omp.h>
 
+#define NUM_OMP_THREADS 1
 
 int main(){
 
+	int numMaxThreads = omp_get_max_threads();
+	int thradsToUse = NUM_OMP_THREADS;
+	omp_set_num_threads(thradsToUse);
 
 	Fabric glass("compressionTestmeshOUT.txt");
 
@@ -16,20 +21,24 @@ int main(){
 	int numFrames =1000;
 	int frameStep =(finalStep-initialStep)/numFrames;
 
+
+	double timeStart = omp_get_wtime();
 	int snapID=0;
-	for (int i = 0; i < 1e6; i++)
+	for (int i = 0; i < 1000; i++)
 	{
 		glass.advanceStep(1e-6);
 		std::cout<<i<<std::endl;
 
 		if (i>=initialStep && i<finalStep && i%frameStep==0)
 		{
-			glass.print(snapID);
+			//glass.print(snapID);
 			snapID++;
 		}
 	}
 	
-	Fabric::printPVDfile(snapID);
+	double timeElapsed = omp_get_wtime()-timeStart;
+	std::cout<<" Time elapsed: " << timeElapsed<< std::endl;
+	//Fabric::printPVDfile(snapID);
 	test();
 
 

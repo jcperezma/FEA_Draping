@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include <algorithm>
+#include <omp.h>
 // mesh that has semi discrete triangles,
 // it will be used to solve the explicit ecuation of motion for 
 // anisotropic fabrics. 

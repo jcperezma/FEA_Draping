@@ -2,6 +2,7 @@
 #include <vector>
 #include "vectorOps.h"
 #include <limits>
+#include <omp.h>
 
 #define sidesPerElement 3 
 
