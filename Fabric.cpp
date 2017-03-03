@@ -82,7 +82,6 @@ std::vector<BC> readBC(std::ifstream & tempFile ){
 		std::stringstream ss;
 		ss<<line;
 		ss>>NumUConstrains;
-		std::stringstream().swap(ss);// flush stream
 	}
 	//read indices of the constrains
 	for (int i = 0; i < NumUConstrains; i++)
