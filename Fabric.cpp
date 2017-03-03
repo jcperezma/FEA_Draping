@@ -9,6 +9,7 @@ std::vector<vector3D> readNodesCoords(std::ifstream & tempFile){
 
 	int NumNodes;
 	std::getline(tempFile,line);
+
 	{ // have not found a better way to flush the stream
 	std::stringstream ss;
 	ss<<line;
@@ -48,18 +49,19 @@ std::vector<SDTriangle> readElements(std::ifstream & tempFile){
 	// read element topology
 	for (int i = 0; i < NumElements; i++)
 	{
-		std::vector<int> nodeID;
+		std::vector<int> nodeID(3);
 		int node;
 		int elementType;
 		getline (tempFile,line);
-		ss<<line;
-		
-		for (int j = 0; j < 3; j++)
-		{
-			ss>>node;
-			nodeID.push_back(node);
-		}
-		}
+			{ // have not found a better way to flush the stream
+			std::stringstream ss;
+			ss<<line;
+				for (int j = 0; j < 3; j++)
+				{
+					ss>>node;
+					nodeID[j]=node;
+				}
+			}
 		SDTriangle tri;
 		tri.setNodes(nodeID);
 		elements[i]=tri;	
