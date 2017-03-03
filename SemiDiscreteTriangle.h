@@ -11,7 +11,7 @@ struct side{
 	int sideID; // side is not aware of which side it is
 	int oposingNode;
 
-	bool operator<(side & sideB){
+	bool operator<(side const & sideB)const{
 		 if(node1==sideB.node1){
 			return node2<sideB.node2;
 		} else{
@@ -19,7 +19,7 @@ struct side{
 		 }
 	}
 
-	bool operator>(side & sideB){
+	bool operator>(side const & sideB)const{
 		if(node1==sideB.node1){
 			return node2>sideB.node2;
 		} else{
@@ -27,7 +27,7 @@ struct side{
 		 }
 	}
 
-	bool isEqual(side & sideB){
+	bool isEqual(side const & sideB)const{
 		return (node1==sideB.node1) && (node2==sideB.node2);
 	}
 };
