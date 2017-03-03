@@ -27,7 +27,7 @@ LFLAGS =
 LIBS = 
 
 # define the C source files
-SRCS = main.c DrapingMesh.cpp DrapingSimulation.cpp Fabric.cpp SemiDiscreteTriangle.cpp tests.cpp vectorOps.cpp
+SRCS = main.cpp DrapingMesh.cpp DrapingSimulation.cpp Fabric.cpp SemiDiscreteTriangle.cpp tests.cpp vectorOps.cpp
 
 # define the C object files 
 #
@@ -60,7 +60,7 @@ $(MAIN): $(OBJS)
 # it uses automatic variables $<: the name of the prerequisite of
 # the rule(a .c file) and $@: the name of the target of the rule (a .o file) 
 # (see the gnu make manual section about automatic variables)
-.c.o:
+.cpp.o:
 		$(CC) $(CFLAGS) $(INCLUDES) -c $<  -o $@
 
 clean:
