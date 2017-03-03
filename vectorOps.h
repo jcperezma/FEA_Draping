@@ -1,5 +1,5 @@
 #pragma once
-#include <math.h>
+#include <cmath>
 
 
 #define PI 3.14159
@@ -113,7 +113,7 @@ inline double dot(vector3D const & A,vector3D const & B  ){
 }
 
 inline double findAngle(vector3D p1, vector3D p2){
-	 double angle = acos(dot(p1, p2));
+	 double angle = std::acos(dot(p1, p2));
 	 if (p1.x*p2.y < p1.y*p2.x)
 	 {
 		 angle = 2 * PI -angle;
