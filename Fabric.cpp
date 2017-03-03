@@ -183,13 +183,13 @@ void Fabric::advanceStep(double dt){
 
 void Fabric::print(){
 	char filename[32];
-	sprintf_s(filename, "fabric_%2d.vtu", fabricID);
+	_sprintf(filename, "fabric_%2d.vtu", fabricID);
 	mesh.printVTUfile(filename);
 };	// outputs vtu file
 
 void Fabric::print(int step){
 	char filename[32];
-	sprintf_s(filename, "fabric_%2dstep%05d.vtu", fabricID,step);
+	_sprintf(filename, "fabric_%2dstep%05d.vtu", fabricID,step);
 	mesh.printVTUfile(filename);
 };	// outputs vtu file
 
@@ -216,7 +216,7 @@ void Fabric::printPVDfile(int numSteps){
 	for (int i = 0; i < numOfFabrics; i++)
 	{
 		char pvdfilename[32];
-		sprintf_s(pvdfilename, "fabric_%02d.pvd", i);
+		_sprintf(pvdfilename, "fabric_%02d.pvd", i);
 		std::ofstream ss;
 		ss.open(pvdfilename);
 		// print header
@@ -224,7 +224,7 @@ void Fabric::printPVDfile(int numSteps){
 		for (int step = 0; step < numSteps; step++)
 		{
 			char filename[32];
-			sprintf_s(filename, "fabric_%2dstep%05d.vtu", i,step);
+			_sprintf(filename, "fabric_%2dstep%05d.vtu", i,step);
 			prindPVDDataset(ss,step,filename);
 		}
 		printPVDfileFooter(ss);

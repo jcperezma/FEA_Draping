@@ -1,6 +1,16 @@
 #include "DrapingMesh.h"
 #include <stdio.h>
 
+#if defined _MSC_VER && _MSC_VER >= 1200
+
+#define _sprintf sprintf_s
+
+#else
+
+#define _sprintf std::sprintf
+
+#endif 
+
 class Fabric
 {
 public:
