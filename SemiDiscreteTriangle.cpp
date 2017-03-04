@@ -406,16 +406,20 @@ void SDTriangle::computeInternalForce(double C1, double C2 , double ct1, double 
 	}
 
 	// if gamma is very high, wrinkle will form, add a force on all triangles normal to the triangle
-
+	std::vector<double> forceEl(9); // force contributions on the element
+	std::fill(forceEl.begin(),forceEl.end(),0);
 	if(std::abs(gamma)>0.4){
 		vector3D N = cross(g_1,g_2);
 		N = N/ (norm(N)*1000000);
 		for (int ii = 0; ii < nodes.size(); ii++)//nodes.size()
 		{
-			int index = nodes[ii]*3;
-			F_int[index] += N.x;
-			F_int[index+1] += N.y;
-			F_int[index+2] += N.z;
+			int index = ii*3;
+			forceEl[index] += N.x;
+			forceEl[index+1] += N.y;
+			forceEl[index+2] += N.z;
+			//F_int[index] += N.x;
+			//F_int[index+1] += N.y;
+			//F_int[index+2] += N.z;
 		}
 
 	}
@@ -423,17 +427,22 @@ void SDTriangle::computeInternalForce(double C1, double C2 , double ct1, double 
 	// Add forces to global force vector
 
 	// tensile forces direction 1
+	std::vector<double> forceEl_11(9); // force contributions on the element
+	std::fill(forceEl_11.begin(),forceEl_11.end(),0);
 	for (int ii = 0; ii < nodes.size(); ii++)
 	{
 		int index = nodes[ii]*3;
 		int localIndex = ii*3;
 		for (int j = 0; j < 3; j++)
 		{
-			F_int[index+j] += n2 / mag_k_1 * C1*epsilon11 * B11[localIndex+j];
-			F_11[index+j] += n2 / mag_k_1 * C1*epsilon11 * B11[localIndex+j];
+			forceEl_11[localIndex+j] += n2 / mag_k_1 * C1*epsilon11 * B11[localIndex+j];
+			//F_int[index+j] += n2 / mag_k_1 * C1*epsilon11 * B11[localIndex+j];
+			//F_11[index+j] += n2 / mag_k_1 * C1*epsilon11 * B11[localIndex+j];
 		}
 	}
 
+	std::vector<double> forceEl_22(9); // force contributions on the element
+	std::fill(forceEl_22.begin(),forceEl_22.end(),0);
 	// tensile forces direction 2
 	for (int ii = 0; ii < nodes.size(); ii++)
 	{
@@ -441,11 +450,14 @@ void SDTriangle::computeInternalForce(double C1, double C2 , double ct1, double 
 		int localIndex = ii*3;
 		for (int j = 0; j < 3; j++)
 		{
-			F_int[index+j] += n1 / mag_k_2 * C2*epsilon22 * B22[localIndex+j];
-			F_22[index+j] += n1 / mag_k_2 * C2*epsilon22 * B22[localIndex+j];
+			forceEl_22[localIndex+j] += n1 / mag_k_2 * C2*epsilon22 * B22[localIndex+j];
+			//F_int[index+j] += n1 / mag_k_2 * C2*epsilon22 * B22[localIndex+j];
+			//F_22[index+j] += n1 / mag_k_2 * C2*epsilon22 * B22[localIndex+j];
 		}
 	}
 
+	std::vector<double> forceEl_s(9); // force contributions on the element
+	std::fill(forceEl_s.begin(),forceEl_s.end(),0);
 	// shear forces
 	double C_gamma = computeC_gamma(gamma, ct1,ct2,ct3);
 	//C_gamma =0.001; // Nm
@@ -455,8 +467,9 @@ void SDTriangle::computeInternalForce(double C1, double C2 , double ct1, double 
 		int localIndex = ii*3;
 		for (int j = 0; j < 3; j++)
 		{
-			F_s[index+j] += nCER * C_gamma *Bgamma[localIndex+j]; 
-			F_int[index+j] += nCER * C_gamma *Bgamma[localIndex+j];   
+			forceEl_s[localIndex+j] += nCER * C_gamma *Bgamma[localIndex+j];
+			//F_s[index+j] += nCER * C_gamma *Bgamma[localIndex+j]; 
+			//F_int[index+j] += nCER * C_gamma *Bgamma[localIndex+j];   
 		}
 	}
 
@@ -511,6 +524,20 @@ void SDTriangle::computeInternalForce(double C1, double C2 , double ct1, double 
 	}
 
 
+	// add Forcess atomically
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			int globalIndex = nodes[i]*3+j;
+			int localIndex = i*3+j;
+			double result = forceEl_11[localIndex] + forceEl_22[localIndex] +forceEl_s[localIndex];
+#pragma omp atomic
+			F_int[globalIndex+j] += result;
+				//F_int[index+j] += n2 /2.0 * mag_g_2 * M22 *Bb2[localIndex+j];   
+		}
+
+	}
 
 	double mag_k_1sq = mag_k_1 *mag_k_1; 
 

@@ -21,10 +21,12 @@ void semiDiscreteMesh::computeMassMatrix(double rho){
 void semiDiscreteMesh::computeInternalForces(double C11, double C22, double ct1, double ct2, double ct3, double n1, double n2, double B_k){
 	for (int i = 0; i < F_int.size(); i++){ F_int[i]=0; F_11[i]=0; F_22[i]=0; F_s[i]=0;}
 
-
-	for (auto & triangle : tris)
+	// all variables are shared
+#pragma omp parallel for 
+	for (int i =0 ; i< tris.size();i++ )//for (auto & triangle : tris)
 	{
-		triangle.computeInternalForce(C11,C22,ct1,ct2,ct3,n1, n2,F_int,coords,u,tris, B_k,F_11,F_22,F_s);
+		tris[i].computeInternalForce(C11,C22,ct1,ct2,ct3,n1, n2,F_int,coords,u,tris, B_k,F_11,F_22,F_s);
+		//triangle.computeInternalForce(C11,C22,ct1,ct2,ct3,n1, n2,F_int,coords,u,tris, B_k,F_11,F_22,F_s);
 	}
 
 }
@@ -362,8 +364,10 @@ void semiDiscreteMesh::findNeighbours(){
 
 void semiDiscreteMesh::computeBendingVariables(){
 
-	for (auto & tri :tris)
+#pragma omp parallel for 
+	for (int i =0; i<tris.size(); i++)	//for (auto & tri :tris)
 	{
-		tri.computeBendingVars(coords);
+		tris[i].computeBendingVars(coords);
+		//tri.computeBendingVars(coords);
 	}
 }

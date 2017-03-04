@@ -30,10 +30,38 @@ void singleTriangle(){
 	//tri.computeInternalForce(46000,48000,0.37044,0.84105,1.0311,F,coords);
 }
 
+double addNtimes( double value ){ 
+	double result =0;
+	for (int i = 0; i < 100; i++)
+	{
+		result+=value;
+	}
+	return result;
+}
+
 void test(){
 
-	semiDiscreteMesh mesh;
-	mesh.initializeTest1();
+	//semiDiscreteMesh mesh;
+	//mesh.initializeTest1();
 
+	// initiliazation in series
+	int numData = 10000000;
+	
+	std::vector<double> a(numData);
+
+	#pragma omp parallel for 
+	for (int i = 0; i < a.size(); i++)
+	{
+		a[i] = i;
+	}
+
+
+#pragma omp parallel for 
+	for (int i = 0; i < a.size(); i++)
+	{
+		a[i] = addNtimes(a[i]);
+	}
+
+	std::cout<<a[400]<<std::endl;
 
 }
